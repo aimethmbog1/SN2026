@@ -1,0 +1,12 @@
+*lightning_logs
+*.ipynb
+*.png
+*.jpg
+*.jpeg
+*.log
+*.ckpt
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+*.pyc
+*.csv

@@ -1,0 +1,232 @@
+Here is my Jupyter Notebook as context. Extract the model architectures, 
+training logic, and visualization patterns from it. Then build the app 
+described in the instructions below.
+
+You are an expert Streamlit developer and data scientist. Your task is to build a 
+professional, fully functional Streamlit web application for stock price prediction 
+using three time series models: LSTM, Facebook Prophet, and Neural Prophet.
+
+You will receive a Jupyter Notebook as reference. Use it strictly to extract:
+- The data pipeline (yfinance download, preprocessing, scalers)
+- The LSTM architecture and training loop
+- The Prophet and NeuralProphet model configurations and fitting logic
+- The prediction and inverse-transform logic
+- The visualization style and structure
+
+Do NOT copy bugs or placeholder variables from the notebook. Rewrite everything 
+cleanly and adapt it to a Streamlit app context.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+APP STRUCTURE — 4 TABS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Build the app using st.tabs() with exactly 4 tabs:
+
+[1] 🏠 Home (Accueil)
+[2] 👥 About Us
+[3] 📚 Documentation  
+[4] 📈 Prediction
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TAB 1 — HOME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Hero section with app title: "StockSight — AI-Powered Stock Prediction"
+- A short description of what the app does (2-3 sentences)
+- Three feature cards displayed side by side using st.columns(3):
+    * Card 1: LSTM — Deep learning for sequential data
+    * Card 2: Facebook Prophet — Bayesian trend decomposition
+    * Card 3: Neural Prophet — Neural network + Prophet hybrid
+- Each card has an icon, a model name, and a 1-sentence description
+- A "Go to Prediction" button that redirects to the Prediction tab
+- Display a live market overview: use yfinance to fetch the current price, 
+  daily change (%), and a small 30-day sparkline chart for each of the 
+  4 tickers (NVDA, ORCL, IBM, CSCO) displayed in a clean 4-column grid
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TAB 2 — ABOUT US
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Section title: "About This Project"
+- Project context: academic ML/Deep Learning project on time series forecasting
+- Two columns layout:
+    * Left: project description, goals, and academic context
+    * Right: tech stack used (Python, PyTorch, Prophet, NeuralProphet, 
+      yfinance, Streamlit, scikit-learn, matplotlib)
+- A "Models at a Glance" comparison table with 3 rows (one per model) and 
+  columns: Model | Type | Strengths | Limitations | Best For
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TAB 3 — DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Use st.expander() sections for each topic:
+
+  [Expander 1] 📊 Data Source & Preprocessing
+      - Source: Yahoo Finance via yfinance
+      - Tickers covered: NVDA, ORCL, IBM, CSCO
+      - Training period: 2015-01-01 to 2023-12-31
+      - Normalization: MinMaxScaler (0,1) for LSTM
+      - Train/test split: 80% / 20%
+
+  [Expander 2] 🧠 LSTM Model
+      - Architecture: 2-layer LSTM, hidden_size=64
+      - Input: 60-day sequences, 4 features (multivariate)
+      - Output: next-day price for all 4 tickers simultaneously
+      - Optimizer: Adam (lr=0.001), Loss: MSELoss
+      - Epochs: 2000
+      - Future prediction: autoregressive loop (day by day)
+
+  [Expander 3] 📈 Facebook Prophet
+      - Type: Bayesian additive regression model
+      - Components: trend + weekly seasonality + yearly seasonality
+      - changepoint_prior_scale: 0.05
+      - Output: point forecast + confidence interval (yhat_lower, yhat_upper)
+      - Input format: ds (date), y (closing price)
+
+  [Expander 4] 🔮 Neural Prophet
+      - Combines Prophet decomposition with autoregressive neural network
+      - n_lags=60 (same lookback window as LSTM)
+      - n_forecasts = user-selected horizon (3 to 12 months)
+      - Regularization: ar_reg=0.1, trend_reg=0.1
+      - Training frequency: Business days ('B')
+
+  [Expander 5] 📐 Evaluation Metrics
+      - RMSE (Root Mean Squared Error) — penalizes large errors
+      - MAE (Mean Absolute Error) — average absolute deviation
+      - MAPE (Mean Absolute Percentage Error) — percentage error
+      - Explain each metric in plain language with its formula
+
+  [Expander 6] ⚠️ Disclaimer
+      - This app is for academic and educational purposes only
+      - Predictions do not constitute financial advice
+      - Past performance does not guarantee future results
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TAB 4 — PREDICTION (Core feature)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LAYOUT: Use a left sidebar panel (st.sidebar) or a top control panel 
+using st.columns for all inputs.
+
+--- INPUT CONTROLS ---
+
+1. Stock selector (chatbot-style labeled input):
+   st.selectbox with label "🔍 Select a stock to analyze:"
+   Options: NVIDIA (NVDA) | Oracle (ORCL) | IBM (IBM) | Cisco (CSCO)
+   Show the company logo or ticker badge next to the name if possible.
+
+2. Prediction horizon slider:
+   st.slider with label "📅 Select prediction horizon:"
+   Range: 3 to 12 | Step: 1 | Unit: months | Default: 3
+   Display the selected value dynamically as: 
+   "You selected: X months (~Y trading days)"
+   (use Y = X * 21 as approximation for trading days)
+
+3. Model selector:
+   st.radio or st.multiselect with label "🤖 Choose prediction model(s):"
+   Options: LSTM | Facebook Prophet | Neural Prophet | Compare All
+   If "Compare All" is selected, run and display all 3 models side by side.
+
+4. A prominent "🚀 Run Prediction" button (st.button)
+   When clicked: show a st.spinner("Training models and generating 
+   predictions... This may take a few minutes.") while processing.
+
+--- PROCESSING LOGIC ---
+
+When "Run Prediction" is clicked:
+- Download data for the selected ticker from 2015-01-01 to 2023-12-31
+  using yfinance (use @st.cache_data to cache downloads)
+- For LSTM:
+    * Use the exact architecture from the notebook (input_size=4 requires
+      all 4 tickers; download all 4 but display only the selected one)
+    * Use sequence_length=60, hidden_size=64, num_layers=2
+    * Convert horizon from months to days (months * 21)
+    * Run the autoregressive future prediction loop
+    * Inverse transform predictions back to dollar prices
+- For Prophet:
+    * Fit on the selected ticker's closing price
+    * Use make_future_dataframe with periods = months * 21, freq='B'
+    * Extract yhat, yhat_lower, yhat_upper for the forecast period
+- For NeuralProphet:
+    * n_forecasts = months * 21
+    * n_lags = 60, ar_reg=0.1, trend_reg=0.1
+    * Fit on training data, predict future dates
+    * Extract yhat1 to yhatn for the projection
+
+--- OUTPUT — RESULTS DISPLAY ---
+
+After prediction completes, display results in this exact order:
+
+[A] Metrics Summary Bar
+    Show a st.columns(3) bar with 3 metric cards:
+    - RMSE on test set
+    - MAE on test set  
+    - MAPE on test set
+    Use st.metric() with delta showing improvement vs a naive baseline.
+
+[B] Main Prediction Chart (Zoomed View — last 90 days + future projection)
+    One matplotlib or plotly figure per model selected, each containing:
+    - Blue line: real historical prices (last 90 days)
+    - Orange dashed line: model fit on historical window
+    - Green dashed line with dots: future projection (user-selected horizon)
+    - Green shaded area: confidence interval (Prophet) or ±5% band (LSTM/NP)
+    - Black vertical dashed line: today / prediction start boundary
+    - Chart title: "{Model} Prediction — {TICKER} | {X}-Month Horizon"
+    - X-axis: Date | Y-axis: Closing Price ($)
+    Below each chart, add a st.info() box with a 2-sentence plain-language
+    description of what the model found (trend direction, confidence, etc.)
+
+[C] Full Historical View Toggle
+    A st.expander("📜 Show full historical prediction (2015–2023)") that 
+    reveals the complete chart showing:
+    - Full real price history
+    - Model fit over the entire period
+    This helps the user evaluate overall model accuracy visually.
+
+[D] Raw Prediction Table
+    A st.expander("📋 Show prediction data table") containing a 
+    st.dataframe() with columns:
+    Date | Predicted Price ($) | Lower Bound ($) | Upper Bound ($)
+    Add a st.download_button to export this table as CSV.
+
+[E] "Compare All Models" view (only when Compare All is selected)
+    Show all 3 model projections on a single chart using different colors:
+    - LSTM: purple
+    - Prophet: orange  
+    - NeuralProphet: green
+    Add a summary table comparing RMSE, MAE, MAPE across models.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TECHNICAL REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Single file app: app.py
+- Use @st.cache_data for data downloads and @st.cache_resource for 
+  model training to avoid retraining on every interaction
+- Use plotly.graph_objects (preferred) or matplotlib for all charts
+  If using plotly, use st.plotly_chart(fig, use_container_width=True)
+- Handle errors gracefully: wrap model training in try/except and 
+  display st.error() with a clear message if training fails
+- Show a st.warning() if the user selects a very long horizon (> 9 months)
+  saying: "Long horizons reduce prediction reliability. Use with caution."
+- All text in the UI must be in French (labels, descriptions, buttons, 
+  messages) but keep model names and technical terms in English.
+- Use a dark or professional financial theme. Add custom CSS via 
+  st.markdown() with unsafe_allow_html=True to style metric cards,
+  tab headers, and the hero section on the Home tab.
+- Add a footer on every tab: 
+  "© 2024 StockSight | Academic Project | Not financial advice"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DELIVERABLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Produce a single, complete, executable app.py file.
+Include at the top a requirements comment block:
+# Requirements: streamlit, yfinance, torch, prophet, neuralprophet,
+#               scikit-learn, pandas, numpy, plotly, matplotlib
+
+The app must run with: streamlit run app.py
+No placeholder functions, no TODO comments — every feature must be 
+fully implemented and functional.
