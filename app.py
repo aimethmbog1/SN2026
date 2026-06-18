@@ -1400,7 +1400,7 @@ with tab1:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("<div class='footer'>© 2026 <span>StockSight By EFEMBA, HAMAD, KAMNO, MBOG</span> &nbsp;|&nbsp; Projet Académique &nbsp;|&nbsp; <span>Pas de conseil financier</span></div>",
+    st.markdown("<div class='footer'>© 2026 <span>StockSight </span> &nbsp;|&nbsp; Projet Académique &nbsp;|&nbsp; <span>Pas de conseil financier</span></div>",
                 unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1478,7 +1478,7 @@ with tab2:
         hide_index=True,
     )
 
-    st.markdown("<div class='footer'>© 2026 <span>StockSight By EFEMBA, HAMAD, KAMNO, MBOG</span> &nbsp;|&nbsp; Projet Académique &nbsp;|&nbsp; <span>Pas de conseil financier</span></div>",
+    st.markdown("<div class='footer'>© 2026 <span>StockSight </span> &nbsp;|&nbsp; Projet Académique &nbsp;|&nbsp; <span>Pas de conseil financier</span></div>",
                 unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1569,7 +1569,7 @@ with tab3:
         - Ne prenez jamais de décisions d'investissement basées uniquement sur cet outil.
         """)
 
-    st.markdown("<div class='footer'>© 2026 <span>StockSight By EFEMBA, HAMAD, KAMNO, MBOG</span> &nbsp;|&nbsp; Projet Académique &nbsp;|&nbsp; <span>Pas de conseil financier</span></div>",
+    st.markdown("<div class='footer'>© 2026 <span>StockSight </span> &nbsp;|&nbsp; Projet Académique &nbsp;|&nbsp; <span>Pas de conseil financier</span></div>",
                 unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1796,5 +1796,5 @@ with tab4:
 
             st.markdown("<hr class='glow-divider'>", unsafe_allow_html=True)
 
-    st.markdown("<div class='footer'>© 2026 <span>StockSight By EFEMBA, HAMAD, KAMNO, MBOG</span> &nbsp;|&nbsp; Projet Académique &nbsp;|&nbsp; <span>Pas de conseil financier</span></div>",
+    st.markdown("<div class='footer'>© 2026 <span>StockSight </span> &nbsp;|&nbsp; Projet Académique &nbsp;|&nbsp; <span>Pas de conseil financier</span></div>",
                 unsafe_allow_html=True)
